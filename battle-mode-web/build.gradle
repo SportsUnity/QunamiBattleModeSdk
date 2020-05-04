@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'Qunami'
+    bintrayName = 'battle-mode-web'
+
+    publishedGroupId = 'co.qunami.battle_mode_web'
+    libraryName = 'BattleModeWe'
+    artifact = 'battle-mode-web'
+
+    libraryDescription = 'An Android library to easily integrate Qunami\'s quiz game.'
+
+    siteUrl = 'https://github.com/SportsUnity/QunamiBattleModeSdk'
+    gitUrl = 'https://github.com/SportsUnity/QunamiBattleModeSdk.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'sportsunity'
+    developerName = 'Sports Unity'
+    developerEmail = 'developer@sportsunity.co'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/SportsUnity/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/SportsUnity/JCenter/master/bintrayv1.gradle'

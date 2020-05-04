@@ -1,0 +1,2 @@
+rootProject.name='QunamiBattleModeSdk'
+include ':app', ':battle-mode-web'
