@@ -3,6 +3,7 @@ package co.quanmi.battle_mode_web;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.util.Log;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitListener {
 
@@ -17,21 +19,27 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
     private TextToSpeech textToSpeech;
     private boolean isTTSAvailable = false;
     private boolean isLanguageAvailable = false;
-    private Context context;
     private boolean isTTSEnabled = false;
 
     private static final String LANGUAGE_HINDI = "hi";
     private static final String LANGUAGE_ENGLISH = "en";
+    private TTSEventListener ttsEventListener = null;
 
     private UtteranceProgressListener utteranceProgressListener = new UtteranceProgressListener() {
         @Override
         public void onStart(String s) {
             //TODO set sound half
+            if (ttsEventListener != null) {
+                ttsEventListener.onSpeakStart();
+            }
         }
 
         @Override
         public void onDone(String s) {
             //TODO set sound full
+            if (ttsEventListener != null) {
+                ttsEventListener.onSpeakDone();
+            }
         }
 
         @Override
@@ -40,8 +48,8 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
         }
     };
 
-    public TextToSpeechGenerator(Activity activity) {
-        this.context = activity.getApplicationContext();
+    public TextToSpeechGenerator(Activity activity, TTSEventListener ttsEventListener) {
+        this.ttsEventListener = ttsEventListener;
         checkTTS_Data(activity);
     }
 
@@ -59,6 +67,9 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
             isTTSEnabled = true;
         } else if (status == TextToSpeech.ERROR) {
             isTTSAvailable = false;
+            if (ttsEventListener != null) {
+                ttsEventListener.onTTSError();
+            }
         }
     }
 
@@ -71,14 +82,19 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
         }
     }
 
-    public void setPreferredLanguage() {
+    public void setPreferredLanguage(String preferredLanguage) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setPreferredLanguageAboveInLollipop(preferredLanguage);
+        } else {
+            setPreferredLanguageBellowLollipop(preferredLanguage);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setPreferredLanguageAboveInLollipop(String preferredLanguage) {
         if (isTTSAvailable) {
-
-            String preferredLanguage = getPreferredLanguage();
-
             Locale locale = new Locale(preferredLanguage, "IN");
             int avail = textToSpeech.isLanguageAvailable(locale);
-
             switch (avail) {
                 case TextToSpeech.LANG_AVAILABLE:
                     textToSpeech.setLanguage(Locale.forLanguageTag(preferredLanguage));
@@ -96,6 +112,56 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
         }
     }
 
+    private void setPreferredLanguageBellowLollipop(String preferredLanguage) {
+        if (isTTSAvailable) {
+            Locale locale = new Locale(preferredLanguage, "IN");
+            int avail = textToSpeech.isLanguageAvailable(locale);
+            switch (avail) {
+                case TextToSpeech.LANG_COUNTRY_AVAILABLE:
+                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE:
+                    textToSpeech.setLanguage(locale);
+                    isLanguageAvailable = true;
+                    break;
+                default:
+                    isLanguageAvailable = false;
+                    break;
+            }
+        }
+    }
+
+    public boolean isHindiLanguageAvailable() {
+        return isLanguageAvailable(LANGUAGE_HINDI);
+    }
+
+    public boolean isEnglishLanguageAvailable() {
+        return isLanguageAvailable(LANGUAGE_ENGLISH);
+    }
+
+    private boolean isLanguageAvailable(String ttsLanguage) {
+        boolean isAvail = false;
+        if (isTTSAvailable) {
+            Locale locale = new Locale(ttsLanguage, "IN");
+            int avail = textToSpeech.isLanguageAvailable(locale);
+            switch (avail) {
+                case TextToSpeech.LANG_AVAILABLE:
+                    isAvail = true;
+                    break;
+                case TextToSpeech.LANG_COUNTRY_AVAILABLE:
+                case TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE:
+                    isAvail = true;
+                    break;
+                default:
+                    isAvail = false;
+                    break;
+            }
+        } else {
+            if (ttsEventListener != null) {
+                ttsEventListener.onTTSError();
+            }
+        }
+        return isAvail;
+    }
+
     public String getPreferredLanguage() {
         String preferredLanguage = LANGUAGE_ENGLISH;
         return preferredLanguage;
@@ -109,15 +175,10 @@ class TextToSpeechGenerator implements android.speech.tts.TextToSpeech.OnInitLis
         return isLanguageAvailable;
     }
 
-    public void installTTS_Data(Activity activity) {
-
-        if (!isTTSAvailable || !isLanguageAvailable) {
-
-            Intent installTTSIntent = new Intent();
-            installTTSIntent.setAction(android.speech.tts.TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-            activity.startActivity(installTTSIntent);
-
-        }
+    public void installTTSData(Activity activity) {
+        Intent installTTSIntent = new Intent();
+        installTTSIntent.setAction(android.speech.tts.TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+        activity.startActivity(installTTSIntent);
     }
 
     public void speakQuestions(String questionText) {
