@@ -14,8 +14,8 @@ import co.quanmi.battle_mode_web.GamePlayHandler;
 import co.quanmi.battle_mode_web.TTSEventListener;
 
 public class GameActivity extends AppCompatActivity {
-    private String url1 = "https://partner-stage.qunami.co:88?ui_data={\"user_id\": \"GD2\", \"q_lang\": \"e\", \"full_name\": \"GD2\", \"photo\": \"\", \"eng_only\": null}&sfs_data=b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiR0QyIn0.kO7h3GIXQNxGM5B8kDGTcVFtaV4BM0ylkE4aD1ACSl0'&sfs=partner-sfs-stg.sportsunity.co&smartfoxServerConfig={\"host\": \"partner-sfs-stg.sportsunity.co\", \"port\": 8843, \"useSSL\": true, \"zone\": \"BBMock\", \"debug\": true}";
-    private String url2 = "https://partner-stage.qunami.co:88?ui_data={\"user_id\": \"GD1\", \"q_lang\": \"e\", \"full_name\": \"GD1\", \"photo\": \"\", \"eng_only\": null}&sfs_data=b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiR0QxIn0.UCJI6qbQ1kDB3LooPVGywwaAme54uMXFz3wLQ1bVtJ8'&sfs=partner-sfs-stg.sportsunity.co&smartfoxServerConfig={\"host\": \"partner-sfs-stg.sportsunity.co\", \"port\": 8843, \"useSSL\": true, \"zone\": \"BBMock\", \"debug\": true}";
+    private String url1 = "https://partner-stage.qunami.co:88?ui_data={\"user_id\": \"Dada4\", \"q_lang\": \"e\", \"full_name\": \"Dada4\", \"photo\": \"\", \"eng_only\": false}&sfs_data=b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiRGFkYTQifQ.Sc0RMhp43mQPNSSAzrYcMN8x2ZwkU-C45tU5RjvBjpc'&sfs=partner-sfs-stg.sportsunity.co&smartfoxServerConfig={\"host\": \"partner-sfs-stg.sportsunity.co\", \"port\": 8843, \"useSSL\": true, \"zone\": \"BBMock\", \"debug\": true}";
+    private String url2 = "https://partner-stage.qunami.co:88?ui_data={\"user_id\": \"Dada3\", \"q_lang\": \"e\", \"full_name\": \"Dada3\", \"photo\": \"\", \"eng_only\": false}&sfs_data=b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiRGFkYTMifQ.VmNKui7wWVJGbGUudIrh1itsTHJX4lJZn8EGxe-fCYA'&sfs=partner-sfs-stg.sportsunity.co&smartfoxServerConfig={\"host\": \"partner-sfs-stg.sportsunity.co\", \"port\": 8843, \"useSSL\": true, \"zone\": \"BBMock\", \"debug\": true}";
     private GamePlayHandler gamePlayHandler;
 
     @Override
@@ -23,22 +23,25 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         gamePlayHandler = new GamePlayHandler();
-        gamePlayHandler.initTextToSpeechForGamePlay(this, new TTSEventListener() {
-            @Override
-            public void onTTSError() {
+        boolean isTTS = getIntent().getBooleanExtra("is_tts", true);
+        if (isTTS) {
+            gamePlayHandler.initTextToSpeechForGamePlay(this, new TTSEventListener() {
+                @Override
+                public void onTTSError() {
+                    Log.d("max", "tts is not availabel");
+                }
 
-            }
+                @Override
+                public void onSpeakStart() {
+                    Log.d("max", "tts is not availabel");
+                }
 
-            @Override
-            public void onSpeakStart() {
-
-            }
-
-            @Override
-            public void onSpeakDone() {
-
-            }
-        });
+                @Override
+                public void onSpeakDone() {
+                    Log.d("max", "tts is not availabel");
+                }
+            });
+        }
         FrameLayout frameLayout = findViewById(R.id.root);
         gamePlayHandler.initGamePlay(this, frameLayout, new GameEventListener() {
             @Override
@@ -92,7 +95,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        gamePlayHandler.destroyWebView();
+        gamePlayHandler.onPauseGame();
     }
 
     @Override

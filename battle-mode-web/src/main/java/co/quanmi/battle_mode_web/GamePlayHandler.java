@@ -126,14 +126,21 @@ public class GamePlayHandler {
         webView.addJavascriptInterface(object, name);
     }
 
-    public void destroyWebView() {
+    public void onPauseGame() {
+        stopSpeaking();
         if (webView != null) {
             webView.destroy();
         }
     }
 
+    private void stopSpeaking() {
+        if (isTextToSpeechNeeded) {
+            textToSpeechGenerator.speakQuestions("");
+        }
+    }
+
     public void onDestroyGame() {
-        destroyWebView();
+        onPauseGame();
         stopTTS();
     }
 
@@ -158,7 +165,7 @@ public class GamePlayHandler {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-               onError(error);
+                onError(error);
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
@@ -177,6 +184,8 @@ public class GamePlayHandler {
             onPlay();
         } else if (message.equals("add_balance")) {
             onAddMoney();
+        } else if (message.equals("answer clicked")) {
+            stopSpeaking();
         } else if (message.startsWith("gameState#")) {
             String gameState = message.substring(message.indexOf("#") + 1);
             onGameStateChanged(gameState);
@@ -188,24 +197,26 @@ public class GamePlayHandler {
     }
 
     private void onGameStateChanged(String gameState) {
-        printLog("onGameStateChanged "+gameState);
+        printLog("onGameStateChanged " + gameState);
         if (gameEventListener != null) {
             gameEventListener.onGameStateChanged(gameState);
         }
     }
 
     private void onConsoleLog(String message) {
-        //printLog("onConsoleLog");
+        printLog("onConsoleLog" + message);
         if (gameEventListener != null) {
             gameEventListener.onConsoleLog(message);
         }
     }
+
     private void onError(WebResourceError error) {
-        printLog("onError "+error.toString());
+        printLog("onError " + error.toString());
         if (gameEventListener != null) {
             gameEventListener.onError(error);
         }
     }
+
     private void onRetry() {
         printLog("onRetryClicked");
         if (gameEventListener != null) {
