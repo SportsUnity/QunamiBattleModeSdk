@@ -13,7 +13,7 @@ import co.quanmi.battle_mode_web.GamePlayHandler;
 import co.quanmi.battle_mode_web.TTSEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    GamePlayHandler gamePlayHandler;
+   private GamePlayHandler gamePlayHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

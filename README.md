@@ -69,10 +69,12 @@ and add following framelayout in your activity_game.xml
       android:id="@+id/root"/>
 ````
 create an GamePlayHandler object in GameActivity.java
-```java private GamePlayHandler gamePlayHandler;
+```java
+private GamePlayHandler gamePlayHandler;
 ````
 Inside onCreate()
-````java gamePlayHandler = new GamePlayHandler();
+````java
+gamePlayHandler = new GamePlayHandler();
 ````
 
 ### if you need in game TextToSpeech
@@ -92,11 +94,11 @@ Inside onCreate()
                 public void onSpeakDone() {
                     
                 }
-            });
+    });
 ````
 #### and override onActivityResult()
 ````java
-@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         gamePlayHandler.sendResultToTTS(this, requestCode, resultCode, data);
@@ -107,6 +109,7 @@ Inside onCreate()
 Call gamePlayHandler.initGamePlay and pass the context and GameEventListener->
 ````java
     FrameLayout frameLayout = findViewById(R.id.root);
+    
     gamePlayHandler.initGamePlay(this, frameLayout, new GameEventListener() {
             @Override
             public void onGameStateChanged(String gameState) {
@@ -136,12 +139,12 @@ Call gamePlayHandler.initGamePlay and pass the context and GameEventListener->
             public void onConsoleLog(String message) {
                 log("console log", message);
             }
-        });
+    });
 ````
 #### override onPause() and onDestory()
 
 ````java
- @Override
+    @Override
     protected void onPause() {
         super.onPause();
         gamePlayHandler.onPauseGame();
