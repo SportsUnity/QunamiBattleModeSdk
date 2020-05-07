@@ -78,7 +78,7 @@ Inside onCreate() initialize the GamePlayHandler object-
 gamePlayHandler = new GamePlayHandler();
 ````
 
-### if you need in game TextToSpeech init textToSpeech for gameplay
+#### To implement inGame TextToSpeech init textToSpeech for gameplay
 ````java
 gamePlayHandler.initTextToSpeechForGamePlay(this, new TTSEventListener() {
     @Override
