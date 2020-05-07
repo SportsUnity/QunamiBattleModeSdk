@@ -14,10 +14,10 @@ implementation 'co.qunami.battle_mode_web:battle-mode-web:0.1.2'
 # Usage
 
 ### TextToSpeech implementation
-To use text to speech functionality,Add following code in MainActivity class
-
+To use text to speech functionality, Add following code in MainActivity class
+````java
 private GamePlayHandler gamePlayHandler;
-
+````
 inside onCreate() add following code-
 ````java
 gamePlayHandler = new GamePlayHandler();
