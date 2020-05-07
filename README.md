@@ -14,7 +14,7 @@ implementation 'co.qunami.battle_mode_web:battle-mode-web:0.1.2'
 # Usage
 
 ### TextToSpeech implementation
-To use our text to speech functionality,Add following code in MainActivit
+To use text to speech functionality,Add following code in MainActivity class
 
 private GamePlayHandler gamePlayHandler;
 
@@ -45,6 +45,14 @@ Override onActivityResult() and send result to TextToSpeechEngine-
 protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     gamePlayHandler.sendResultToTTS(this, requestCode, resultCode, data);
+}
+````
+And override onDestory to stop TTSEngine
+````java
+@Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gamePlayHandler.stopTTS();
 }
 ````
 
