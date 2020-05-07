@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 ext {
     bintrayRepo = 'Qunami'
-    bintrayName = 'battle-mode-web'
+    bintrayName = 'co.qunami.battle_mode_web'
 
     publishedGroupId = 'co.qunami.battle_mode_web'
     libraryName = 'BattleModeWe'
@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/SportsUnity/QunamiBattleModeSdk'
     gitUrl = 'https://github.com/SportsUnity/QunamiBattleModeSdk.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.1.1'
 
     developerId = 'sportsunity'
     developerName = 'Sports Unity'
