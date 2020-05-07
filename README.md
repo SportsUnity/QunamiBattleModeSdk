@@ -13,8 +13,8 @@ implementation 'co.qunami.battle_mode_web:battle-mode-web:0.1.2'
 
 # Usage
 
-## For TextToSpeech
-To use text to speech functionality,Add following code in your MainActivity
+### TextToSpeech implementation
+To use our text to speech functionality,Add following code in MainActivit
 
 private GamePlayHandler gamePlayHandler;
 
@@ -39,7 +39,7 @@ gamePlayHandler.setUpTextToSpeechEngine(this, new TTSEventListener() {
     }
 });
 ````
-Override onActivityResult and send result to TextToSpeechEngine-
+Override onActivityResult() and send result to TextToSpeechEngine-
 ````java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -59,7 +59,7 @@ if not available then call-
 ````java
 gamePlayHandler.installTTSData(MainActivity.this);
 ````
-## For game play
+## Implementation For game play
 Create a new GameActivity.java class
 
 and add following framelayout in your activity_game.xml
@@ -78,7 +78,7 @@ Inside onCreate() initialize the GamePlayHandler object-
 gamePlayHandler = new GamePlayHandler();
 ````
 
-### if you need in game TextToSpeech
+### if you need in game TextToSpeech init textToSpeech for gameplay
 ````java
 gamePlayHandler.initTextToSpeechForGamePlay(this, new TTSEventListener() {
     @Override
@@ -105,7 +105,7 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
 ````
 
 ### Init for game play
-Call gamePlayHandler.initGamePlay and pass the context and GameEventListener->
+Call gamePlayHandler.initGamePlay and pass the Context, FrameLayout and GameEventListener->
 ````java
 FrameLayout frameLayout = findViewById(R.id.root);
 
@@ -134,6 +134,10 @@ gamePlayHandler.initGamePlay(this, frameLayout, new GameEventListener() {
         log("console log", message);
     }
 });
+````
+And to start the game call
+````java
+gamePlayHandler.loadUrl(url1);
 ````
 #### override onPause() and onDestory()
 
